@@ -5,8 +5,8 @@ import pandas as pd
 def create_matches():
     if prospect_file is None or customer_file is None:
         st.error("Please select prospect and/or customer file")
-    elif save_path == "" or file_name == "":
-        st.error("Please enter save path and/or file name")
+    # elif save_path == "" or file_name == "":
+    #    st.error("Please enter save path and/or file name")
     elif "person_hash" in [
         prosp_addr,
         prosp_ln,
@@ -96,15 +96,23 @@ if customer_file is not None:
         cust_zip = st.selectbox("Select Customer Zip Column", customer_columns)
 
 # Path and file name for resulting match file
-save_path = st.text_input("Save Location")
 file_name = st.text_input("File Name (Without Extension)")
 
-match_button = st.button("Create Matches")
+col7, col8, col9 = st.columns(3)
+with col7:
+    match_button = st.button("Create Matches")
 if match_button:
     matches = create_matches()
     st.session_state["df"] = matches
 
 if "df" in st.session_state:
+    with col9:
+        st.download_button(
+            "Download Match File",
+            data=st.session_state.df,
+            file_name=file_name,
+            mime="text/csv",
+        )
     cols = st.session_state.df.columns
     grp_col = st.selectbox("Select grouping column", cols)
     st.dataframe(
