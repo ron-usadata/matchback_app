@@ -42,12 +42,8 @@ def create_matches():
         total_matches.drop_duplicates(
             subset=["person_hash_Customer"], inplace=True, keep="first"
         )
-        total_matches.to_csv(r"{}\{}.csv".format(save_path, file_name), index=False)
-        st.success(
-            r"Match File created! Find at location {}\{}.csv".format(
-                save_path, file_name
-            )
-        )
+        # total_matches.to_csv(r"{}\{}.csv".format(save_path, file_name), index=False)
+        st.success(r"Matches Created! Stats below")
         st.balloons()
         return total_matches
 
@@ -95,9 +91,6 @@ if customer_file is not None:
     with col6:
         cust_zip = st.selectbox("Select Customer Zip Column", customer_columns)
 
-# Path and file name for resulting match file
-file_name = st.text_input("File Name (Without Extension)")
-
 col7, col8, col9 = st.columns(3)
 with col7:
     match_button = st.button("Create Matches")
@@ -106,6 +99,9 @@ if match_button:
     st.session_state["df"] = matches
 
 if "df" in st.session_state:
+    # Path and file name for resulting match file
+    st.text(f"Total Matches: {len(st.session_state.df)}")
+    file_name = st.text_input("File Name (Without Extension)")
     with col9:
         st.download_button(
             "Download Match File",
