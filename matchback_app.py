@@ -112,7 +112,7 @@ if "df" in st.session_state:
         st.download_button(
             "Download Match File",
             data=csv,
-            file_name=file_name,
+            file_name=(f"{file_name}.csv" if file_name != "" else "match_file.csv"),
             mime="text/csv",
         )
     cols = st.session_state.df.columns
