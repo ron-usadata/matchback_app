@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 
 
+@st.cache
+def convert_df(df):
+    return df.to_csv().encode("utf-8")
+
+
 def create_matches():
     if prospect_file is None or customer_file is None:
         st.error("Please select prospect and/or customer file")
@@ -100,12 +105,13 @@ if match_button:
 
 if "df" in st.session_state:
     # Path and file name for resulting match file
+    csv = convert_df(st.session_state.df)
     st.text(f"Total Matches: {len(st.session_state.df)}")
     file_name = st.text_input("File Name (Without Extension)")
     with col9:
         st.download_button(
             "Download Match File",
-            data=st.session_state.df,
+            data=csv,
             file_name=file_name,
             mime="text/csv",
         )
