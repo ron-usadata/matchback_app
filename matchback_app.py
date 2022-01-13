@@ -46,13 +46,22 @@ def create_matches():
         jr_matches = prospects.merge(
             customers, how="inner", on="jr_string", suffixes=["_Prospect", "_Customer"]
         )
+        jr_matches["match_type"] = "JR"
         abil_matches = prospects.merge(
             customers,
             how="inner",
             on="household.abilitec.householdLink",
             suffixes=["_Prospect", "_Customer"],
         )
+        abil_matches["match_type"] = "Abilitec"
         total_matches = pd.concat([jr_matches, abil_matches])
+        total_matches.loc[
+            total_matches.duplicated(
+                subset=["person_hash_Prospect", "person_hash_Customer"], keep="last"
+            ),
+            "match_type",
+        ] = "Both"
+
         total_matches.drop_duplicates(
             subset=["person_hash_Customer"], inplace=True, keep="first"
         )
