@@ -15,6 +15,7 @@ def convert_df(df):
 
 
 def create_matches():
+    print(cust_dedupe)
     if prospect_file is None or customer_file is None:
         st.error("Please select prospect and/or customer file")
         return False
@@ -27,9 +28,11 @@ def create_matches():
         cust_addr,
         cust_ln,
         cust_zip,
-        cust_dedupe,
     ]:
         st.error("Please select prospect and customer columns")
+        return False
+    elif len(cust_dedupe) == 0:
+        st.error("Please select column(s) for deduplicating")
         return False
     else:
         customers.drop_duplicates(subset=cust_dedupe, inplace=True)
@@ -90,6 +93,7 @@ st.text(
 # file selection for customer file with formatting for column selection
 customer_file = st.file_uploader("Select Customer File")
 col4, col5, col6 = st.columns(3)
+col_ded, col_blank = st.columns(2)
 st.text(
     "-----------------------------------------------------------------------------------"
 )
@@ -115,7 +119,10 @@ if customer_file is not None:
         cust_ln = st.selectbox("Select Customer Lastname Column", customer_columns)
     with col6:
         cust_zip = st.selectbox("Select Customer Zip Column", customer_columns)
-    cust_dedupe = st.multiselect("Select Column(s) to Dedupe From", customer_columns)
+    with col_ded:
+        cust_dedupe = st.multiselect(
+            "Select Column(s) to Dedupe From", customer_columns
+        )
 
 col7, col8, col9 = st.columns(3)
 with col7:
