@@ -27,10 +27,12 @@ def create_matches():
         cust_addr,
         cust_ln,
         cust_zip,
+        cust_dedupe,
     ]:
         st.error("Please select prospect and customer columns")
         return False
     else:
+        customers.drop_duplicates(subset=cust_dedupe, inplace=True)
         prospects["jr_string"] = prospects.apply(
             lambda row: str(row[prosp_addr]).lower().strip()[:10]
             + str(row[prosp_ln]).lower().strip()[:2]
@@ -65,7 +67,7 @@ def create_matches():
         total_matches.drop_duplicates(
             subset=["person_hash_Customer"], inplace=True, keep="first"
         )
-        # total_matches.to_csv(r"{}\{}.csv".format(save_path, file_name), index=False)
+
         st.success(r"Matches Created! Stats below")
         st.balloons()
         return total_matches
@@ -113,6 +115,7 @@ if customer_file is not None:
         cust_ln = st.selectbox("Select Customer Lastname Column", customer_columns)
     with col6:
         cust_zip = st.selectbox("Select Customer Zip Column", customer_columns)
+    cust_dedupe = st.multiselect("Select Column(s) to Dedupe From", customer_columns)
 
 col7, col8, col9 = st.columns(3)
 with col7:
