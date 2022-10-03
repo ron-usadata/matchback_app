@@ -31,6 +31,8 @@ def create_matches():
         st.error("Please select prospect and customer columns")
         return False
     else:
+        prospect_file.seek(0)
+        customer_file.seek(0)
         prospects = pd.read_csv(prospect_file, dtype={prosp_zip:str})
         customers = pd.read_csv(customer_file, dtype={cust_zip:str})
         if 'person_hash' not in prospects.columns:
