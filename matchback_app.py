@@ -42,13 +42,13 @@ def create_matches():
         prospects["jr_string"] = prospects.apply(
             lambda row: str(row[prosp_addr]).lower().strip()[:10]
             + str(row[prosp_ln]).lower().strip()[:2]
-            + row[prosp_zip],
+            + str(row[prosp_zip]),
             axis=1,
         )
         customers["jr_string"] = customers.apply(
             lambda row: str(row[cust_addr]).lower().strip()[:10]
             + str(row[cust_ln]).lower().strip()[:2]
-            + row[cust_zip],
+            + str(row[cust_zip]),
             axis=1,
         )
         jr_matches = prospects.merge(
