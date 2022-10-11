@@ -33,8 +33,14 @@ def create_matches():
     else:
         prospect_file.seek(0)
         customer_file.seek(0)
-        prospects = pd.read_csv(prospect_file, dtype={prosp_zip:str})
-        customers = pd.read_csv(customer_file, dtype={cust_zip:str})
+        if prospect_file.name[-3:] == 'csv':
+            prospects = pd.read_csv(prospect_file, dtype={prosp_zip:str})
+        else:
+            prospects = pd.read_excel(prospect_file, dtype={prosp_zip:str})
+        if customer_file.name[-3:] == 'csv':
+            customers = pd.read_csv(customer_file, dtype={cust_zip:str})
+        else:
+            customers = pd.read_excel(customer_file, dtype={cust_zip:str})
         if 'person_hash' not in prospects.columns:
             prospects.reset_index(inplace=True)
             prospects.rename(columns={'index':'person_hash'}, inplace=True)
@@ -105,7 +111,10 @@ st.text(
 
 # When a file is selected, load into dataframe and allow column selection
 if prospect_file is not None:
-    prospect_columns.extend(pd.read_csv(prospect_file, nrows=0).columns.tolist())
+    if prospect_file.name[-3:] == 'csv':
+        prospect_columns.extend(pd.read_csv(prospect_file, nrows=0).columns.tolist())
+    else:
+        prospect_columns.extend(pd.read_excel(prospect_file, nrows=0).columns.tolist())
     with col1:
         prosp_addr = st.selectbox("Select Prospect Address Column", prospect_columns)
     with col2:
@@ -115,7 +124,10 @@ if prospect_file is not None:
 
 
 if customer_file is not None:
-    customer_columns.extend(pd.read_csv(customer_file, nrows=0).columns.tolist())
+    if customer_file.name[-3:] == 'csv':
+        customer_columns.extend(pd.read_csv(customer_file, nrows=0).columns.tolist())
+    else:
+        customer_columns.extend(pd.read_excel(customer_file, nrows=0).columns.tolist())
     with col4:
         cust_addr = st.selectbox("Select Customer Address Column", customer_columns)
     with col5:
