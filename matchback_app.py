@@ -105,7 +105,7 @@ st.text(
 
 # When a file is selected, load into dataframe and allow column selection
 if prospect_file is not None:
-    prospect_columns += pd.read_csv(prospect_file, nrows=0).columns.tolist()
+    prospect_columns.extend(pd.read_csv(prospect_file, nrows=0).columns.tolist())
     with col1:
         prosp_addr = st.selectbox("Select Prospect Address Column", prospect_columns)
     with col2:
@@ -115,7 +115,7 @@ if prospect_file is not None:
 
 
 if customer_file is not None:
-    customer_columns += pd.read_csv(customer_file, nrows=0).columns.tolist()
+    customer_columns.extend(pd.read_csv(customer_file, nrows=0).columns.tolist())
     with col4:
         cust_addr = st.selectbox("Select Customer Address Column", customer_columns)
     with col5:
